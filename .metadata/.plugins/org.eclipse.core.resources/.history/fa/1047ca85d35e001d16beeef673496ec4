@@ -1,0 +1,49 @@
+xpackage main;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
+import org.bson.Document;
+
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import servicios.PageManager;
+import servicios.PostManager;
+import web.WebApi;
+
+public class Main {
+
+	public static void main(String[] args) {
+//		WebApi servicio =
+//                new WebApi(1234, new PageManager(), new PostManager());
+//        servicio.start();
+        
+
+		
+	     MongoClient mongoClient = new MongoClient();
+       MongoDatabase database = mongoClient.getDatabase("blog");
+       MongoCollection<Document> collectionPage = database.getCollection("page");
+       MongoCollection<Document> collectionPost = database.getCollection("post");
+		
+      Document doc = new Document("title", "Pagina 1")
+              .append("text", "Texto de pagina 1 ...")
+              .append("author", "Marti")
+              .append("date", Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+      collectionPage.insertOne(doc);
+
+      //AGREGO UN POST:
+
+      Document doc = new Document("title", "Post 1")
+              .append("text", "Texto de post 1 ...")
+              .append("author", "Marti")
+              .append("tags", "tags...")
+              .append("resume", "resumen...")
+              .append("relatedLinks", "links...")
+              .append("date", Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+      collectionPost.insertOne(doc);
+	}
+
+}

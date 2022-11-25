@@ -1,0 +1,15 @@
+package main;
+
+import servicios.PageManager;
+import servicios.PostManager;
+import web.WebApi;
+
+public class Main {
+
+	public static void main(String[] args) {
+		WebApi servicio =
+                new WebApi(1234, new PageManager(), new PostManager());
+        servicio.start();
+	}
+
+}

@@ -1,0 +1,7 @@
+package servicios;
+
+import api.PageServicio;
+
+public class PageManager implements PageServicio{
+
+}

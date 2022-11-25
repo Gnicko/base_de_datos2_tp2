@@ -1,0 +1,24 @@
+package servicios;
+
+import java.util.List;
+
+import org.bson.Document;
+
+import api.PageService;
+
+public class PageManager implements PageService{
+
+	@Override
+	public Document findPage(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Document> findAllPages() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
+}

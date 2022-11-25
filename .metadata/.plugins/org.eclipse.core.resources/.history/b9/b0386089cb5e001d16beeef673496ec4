@@ -1,0 +1,52 @@
+package servicios;
+
+import java.util.List;
+
+import org.bson.Document;
+
+import api.PageService;
+
+public class PageManager implements PageService{
+
+	  @Override
+	    public String findPage(String id) {
+
+	        try (MongoClient mongoClient = new MongoClient()) {
+	            MongoDatabase database = mongoClient.getDatabase("blog");
+	            MongoCollection<Document> collection = database.getCollection("page");
+
+	            FindIterable<Document> ds = collection.find(Filters.eq("_id", new ObjectId(id)));
+	           // FindIterable myDoc = collection.find(Filters.eq("_id", new ObjectId(id))).first();
+
+	            return (StreamSupport.stream(ds.spliterator(), false)
+	                    .map(Document::toJson)
+	                    .collect(Collectors.joining(", ", "[", "]")));
+
+	        } catch (Exception e) {
+	            throw new RuntimeException("ERRORRR page");
+	        }
+
+
+	    }
+
+	    @Override
+	    public List<Document> findAllPages() {
+	        try (MongoClient mongoClient = new MongoClient()) {
+	            MongoDatabase database = mongoClient.getDatabase("blog");
+	            MongoCollection<Document> collection = database.getCollection("page");
+	            List<Document> lista = new ArrayList<>();
+
+//	            para traer todos los elementos de la coleccion (con un cursor)
+	            for (Document cur : collection.find()) {
+//	                System.out.println(cur.toJson());
+	                lista.add(cur);
+	            }
+	            return lista;
+
+	        } catch (Exception e) {
+	            throw new RuntimeException("ERRORRR");
+	        }
+	    }
+	
+
+}

@@ -1,0 +1,140 @@
+package web;
+
+
+	
+	import java.util.ArrayList;
+	import java.util.Arrays;
+	import java.util.List;
+	import java.util.Map;
+	import java.util.stream.Collectors;
+
+	import api.PageServicio;
+	import api.PostServicio;
+//	import exceptions.ModeloException;
+	import io.javalin.Javalin;
+	import io.javalin.http.Handler;
+	import org.bson.Document;
+	import org.bson.types.ObjectId;
+	import servicios.PageManager;
+
+
+	public class WebApi {
+
+
+	    private int webPort;
+	    private PageServicio PageServicio;
+	    private PostServicio PostServicio;
+
+
+	    public WebApi(int webPort, PageServicio PageServicio, PostServicio PostServicio) {
+	        this.webPort = webPort;
+	        this.PageServicio = PageServicio;
+	        this.PostServicio = PostServicio;
+	    }
+
+	    public void start() {
+
+//	        En los servicios de Javalin setear en el header del response:
+//	        res.header("Access-ControlAllow-Origin", "*");
+//	        Esto permite consumir los servicios desde reactblog (nunca usar esto en ambientes PRODUCTIVOS).
+
+	        Javalin app = Javalin.create(config ->
+	        {
+	            //headers ?
+
+	            config.enableCorsForAllOrigins();
+	        }).start(this.webPort);
+	        //posts y gets
+	        app.get("/pages/{id}", this.getPage());
+	        app.get("/posts/latest", this.getLastestPosts());
+	        app.get("/posts/{id}", this.getPost());
+	        app.get("/byauthor", this.getByAuthor());//nombre de autor y cantidad de posteos
+	        app.get("/posts/author/{nombreautor}", this.getPostsByAuthor());
+	        app.post("/search/{text}", this.searchPost());
+
+
+	        //excepciones
+//	        app.exception(ModeloException.class, (e, ctx) -> {
+//	            e.printStackTrace();
+//	            ctx.json(Map.of("result", "error", "errors", e.toMap()));
+//	            // log error in a stream...
+//	        });
+
+	        app.exception(Exception.class, (e, ctx) -> {
+	            e.printStackTrace();
+	            ctx.json(Map.of("result", "error", "message", "Ups... algo se rompió: " + e.getMessage()));
+	            // log error in a stream...
+	        });
+	    }
+
+	    private Handler getPage() {
+	        return ctx -> {
+
+	            String id = ctx.pathParam("id"); // con esto recibe el parametro de la ruta pages/id
+
+	            Document doc = PageServicio.findPage(id);
+	            // doc.append("_id", new ObjectId(id));
+	            System.out.println(doc);
+
+	            ctx.json(Map.of("page", doc));
+
+	        };
+	    }
+
+	    private Handler getLastestPosts() {
+	        return ctx -> {
+
+
+
+	            ctx.json(Map.of("result", "success"));
+
+	        };
+	    }
+
+	    private Handler getPost() {
+	        return ctx -> {
+
+
+	            String id = ctx.pathParam("id"); // con esto recibe el parametro de la ruta pages/id
+
+	            Document doc = PostServicio.findPost(id);
+	            // doc.append("_id", new ObjectId(id));
+	            System.out.println(doc);
+
+	            ctx.json(Map.of("post", doc));
+
+	        };
+
+	    }
+
+	    private Handler getByAuthor() {
+	        return ctx -> {
+
+	            String id = ctx.queryParam("id");//agregar version
+
+	            ctx.json(Map.of("result", "success"));
+
+	        };
+	    }
+
+	    private Handler getPostsByAuthor() {
+	        return ctx -> {
+
+	            String id = ctx.queryParam("id");//agregar version
+
+	            ctx.json(Map.of("result", "success"));
+
+	        };
+	    }
+
+	    private Handler searchPost() {
+	        return ctx -> {
+
+	            String id = ctx.queryParam("id");//agregar version
+
+	            ctx.json(Map.of("result", "success"));
+
+	        };
+	    }
+
+	}

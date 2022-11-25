@@ -1,0 +1,17 @@
+package api;
+
+import java.util.List;
+
+import org.bson.Document;
+
+public interface PostServicio {
+	Document findPost(String id);
+
+    List<Document> findLatestPosts();
+
+    Document findByAuthor();
+
+    List<Document> findPostByAuthor();
+
+    List<Document> searchPosts(String text);
+}

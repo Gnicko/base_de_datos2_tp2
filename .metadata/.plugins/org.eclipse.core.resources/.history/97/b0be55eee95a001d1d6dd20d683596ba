@@ -1,0 +1,6 @@
+package api;
+
+public interface PageServicio {
+	Document findPage(String id);
+	   List<Document> findAllPages();
+}
